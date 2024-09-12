@@ -87,3 +87,22 @@ b:plus()
 b:print()
 b.z = 30
 b:print()
+
+--[[
+
+¹Ø¼ü´úÂë£º
+
+Class = {x=0,y=0}
+Class.__index = Class
+
+SubClass = {z = 0}
+SubClass.__index = SubClass
+setmetatable(SubClass, Class)
+
+local a = {}
+setmetatable(a, Class)
+
+local b = {}
+setmetatable(b, SubClass)
+
+--]]
