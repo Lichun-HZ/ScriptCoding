@@ -14,14 +14,14 @@ function Class(classname, Super)
         local superType = type(Super)
         if superType ~= "table" then
             error("Super must be a table, " .. superType)
-        end 
+        end
     end
 
     local cls = {}           -- 创建类表
     cls.name = classname     -- 设置类名
     cls.super = Super        -- 设置基类
     cls.__index = cls        -- 设置__index为自身
-    cls.Ctor = function()    -- 默认构造函数   
+    cls.Ctor = function()    -- 默认构造函数
     end
 
     -- GetClass不用每个实例都有，直接放到class表中，实例访问时调用class表的
@@ -52,7 +52,7 @@ function Class(classname, Super)
     return cls
 end
 
----@class BaseClass 
+---@class BaseClass
 ---@field public x integer
 ---@field public y integer
 BaseClass = Class("BaseClass")
