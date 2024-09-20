@@ -1,5 +1,3 @@
-require("lldebugger").start()
-
 ---@class TaskManager
 local TaskManager = {}
 ---@type table<thread, Task>
@@ -51,7 +49,7 @@ local function CheckResumeTask(task)
 
             for _,v in ipairs(task.CurrentWaited) do
                 -- 若有一个依赖的Task未完成，继续等待
-                if v:IsFinished() then
+                if v:IsFinished() then 
                     table.insert(taskResults, v:GetValue())
                 else
                     return
@@ -94,12 +92,18 @@ function TaskManager:ResumeTask(task, ...)
     task.CurrentWaited = nil
     task.WaitType = ELTaskWaiteType.Wait_None
 
-    local _,retValue = coroutine.resume(task.Coroutine, ...)
+    -- 如果协程运行出现异常，success返回false，retValue返回异常的原因，taskStatus返回dead。
+    local success,retValue = coroutine.resume(task.Coroutine, ...)
     local taskStatus = coroutine.status(task.Coroutine)
 
     if taskStatus == "dead" then -- 运行完成
         task.Status = ELTaskStatus.Dead
-        task.Value = retValue
+        if success then
+            task.Value = retValue
+        else
+            print("coroutine error:", retValue)
+            task.Value = nil
+        end
 
         -- 如果task已经完成，调用OnTaskComplete。对于普通task，执行完成即完成。
         -- 对应AsyncTask，需要Async操作返回才算完成。

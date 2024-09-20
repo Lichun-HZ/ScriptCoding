@@ -20,6 +20,9 @@ end
 
 function Task1(p1, p2)
     print("Task1 Begin: ", p1, p2)
+--    error('Task1 error')
+    sss.r = 1
+
     LTask.Await.WaitForTime(2)
     print("Task1 End")
     return p1 + p2
@@ -38,6 +41,25 @@ function AsyncTask1(p1, p2)
     print("AsyncTask1 End")
 end
 
+function hello2()
+    sss.r = 1
+    return 100, 200
+end
+
+function errorhandler(error)
+    print(error)
+    print(debug.traceback())
+end
+
+function hello()
+    local status, result = xpcall(hello2, errorhandler)
+    if status then
+        print("Get Result: ", result)
+    else
+        print("Error: ", result)
+    end
+end
+
 function MainTask(task1, task2, p1)
     print("MainTask Begin: ", p1)
     print("MainTask Waiting Task1,2")
@@ -46,6 +68,8 @@ function MainTask(task1, task2, p1)
     print("MainTask Waited Task1,2, get ", ret[1], ret[2])
     print("MainTask End")
 end
+
+hello()
 
 local task1 = MyAsyncTask:New(AsyncTask1)
 local task2 = LTask.Task:New(Task2)
