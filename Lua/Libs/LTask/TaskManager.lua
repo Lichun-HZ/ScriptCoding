@@ -49,7 +49,7 @@ local function CheckResumeTask(task)
 
             for _,v in ipairs(task.CurrentWaited) do
                 -- 若有一个依赖的Task未完成，继续等待
-                if v:IsFinished() then 
+                if v:IsFinished() then
                     table.insert(taskResults, v:GetValue())
                 else
                     return
